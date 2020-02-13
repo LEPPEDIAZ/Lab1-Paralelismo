@@ -22,8 +22,8 @@ int main(int argc, char* argv[]) {
 #  pragma omp parallel num_threads(thread_count) 
    Trap(a, b, n, &global_result);
 
-   printf("With thread_count = %d threads, our estimate ", thread_count);
-   printf("With n = %d trapezoids, our estimate\n", n);
+   printf("Con el contador de threads = %d threads, el estimado", thread_count);
+   printf("DIVISIBLE: n = %d trapezoids, el estimado\n", n);
    printf("of the integral from %f to %f = %.14e\n",
       a, b, global_result);
    return 0;
