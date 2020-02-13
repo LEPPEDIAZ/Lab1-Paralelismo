@@ -3,6 +3,7 @@
 #include <math.h>
 #include <omp.h>
 
+void divisible(char* prog_name);
 double f(double x);    /* Function we're integrating */
 void Trap(double a, double b, int n, double* global_result_p);
 
@@ -12,13 +13,16 @@ int main(int argc, char* argv[]) {
    int     n;                    /* Total number of trapezoids    */
    int     thread_count;
 
+   if (argc != 5) divisible(argv[0]);
    thread_count = strtol(argv[1], NULL, 10);
    printf("Enter a, b, and n\n");
    scanf("%lf %lf %d", &a, &b, &n);
 
+   if (n % thread_count != 0) divisible(argv[0]); //si n es divisible por thread count
 #  pragma omp parallel num_threads(thread_count) 
    Trap(a, b, n, &global_result);
 
+   printf("With thread_count = %d threads, our estimate ", thread_count);
    printf("With n = %d trapezoids, our estimate\n", n);
    printf("of the integral from %f to %f = %.14e\n",
       a, b, global_result);
@@ -37,6 +41,11 @@ double f(double x) {
    return_val = x*x;
    return return_val;
 }  /* f */
+
+void divisible(char*prog_name){
+   fprintf(stderr, "usage: %s numero de trapezoides debe ser divisible por numero de threads \n", prog_name);
+   exit(0);
+}
 
 /*------------------------------------------------------------------
  * Function:    Trap
@@ -66,6 +75,6 @@ void Trap(double a, double b, int n, double* global_result_p) {
    }
    my_result = my_result*h; 
 
-#  pragma omp critical 
+//#  pragma omp critical 
    *global_result_p += my_result; 
 }  /* Trap */
